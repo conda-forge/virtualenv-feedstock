@@ -1,6 +1,6 @@
 {% set name = "virtualenv" %}
-{% set version = "15.1.0" %}
-{% set sha256 = "aea627d114a3863d6374c5a3fc3cdd08907e0ac951cf93b458e5ba5998c516de" %}
+{% set version = "16.0.0" %}
+{% set sha256 = "5a597f845cf785d46c3ae39d6cb18ef0b6af4ca366da40682364f78f7fe00d22" %}
 
 package:
   name: "{{ name }}"
