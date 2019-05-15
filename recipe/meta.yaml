@@ -1,4 +1,4 @@
-{% set version = "16.0.0" %}
+{% set version = "16.6.0" %}
 
 package:
   name: virtualenv
@@ -6,13 +6,13 @@ package:
 
 source:
   url: https://github.com/pypa/virtualenv/archive/{{ version }}.tar.gz
-  sha256: 5a597f845cf785d46c3ae39d6cb18ef0b6af4ca366da40682364f78f7fe00d22
+  sha256: 958b2c1d8e3a8e8644e7f90186d2c3faae9853c5cbcae70ea9d8fdb1b0f5c04e
   patches:
     - 0001-Mach-O-Copy-any-dynamic-libraries-and-symlinks-to-th.patch
     - 0002-ELF-Copy-any-dynamic-libraries-and-symlinks-to-the-c.patch
 
 build:
-  number: 1000
+  number: 0
   script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv"
   entry_points:
     - virtualenv = virtualenv:main
