@@ -1,6 +1,6 @@
-From b543b4f432d1631c9c69b1980225335636ae3102 Mon Sep 17 00:00:00 2001
-From: Ray Donnelly <mingw.android@gmail.com>
-Date: Thu, 9 Feb 2017 19:25:40 +0000
+From fa72c3223855e9dad067a9ddc3e47345d5eca1dd Mon Sep 17 00:00:00 2001
+From: William Jamir Silva <williamjamir@gmail.com>
+Date: Sun, 2 Jun 2019 21:18:08 -0300
 Subject: [PATCH 2/2] ELF: Copy any dynamic libraries and symlinks to the
  correct relative location
 
@@ -10,17 +10,21 @@ the same results in all cases, but for the purposes of virtualenv, this
 code seems to work well enough.
 
 Tested this with both big and little-endian ELF files.
+
+Patch original created by:
+    From: Ray Donnelly <mingw.android@gmail.com>
+    Date: Thu, 9 Feb 2017 19:25:40 +0000
 ---
- virtualenv.py | 315 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 315 insertions(+)
+ virtualenv.py | 314 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 314 insertions(+)
 
 diff --git a/virtualenv.py b/virtualenv.py
-index 24d0208..18f02f6 100755
+index e888429..4af58f0 100755
 --- a/virtualenv.py
 +++ b/virtualenv.py
-@@ -2462,6 +2462,319 @@ class machofile(object):
+@@ -2717,6 +2717,318 @@ class machofile(object):
+     def is_executable(self):
          return True
- 
  
 +###########################################
 +# Constants used in the ELF specification #
@@ -334,11 +338,10 @@ index 24d0208..18f02f6 100755
 +    def selfdir(self):
 +        return None
 +
-+
+ 
  class inscrutablefile(object):
      def __init__(self, file, initial_rpaths_transitive=[]):
-         return
-@@ -2484,6 +2797,8 @@ def codefile(file, initial_rpaths_transitive=[]):
+@@ -2740,6 +3052,8 @@ def codefile(file, initial_rpaths_transitive=[]):
      file.seek(0)
      if magic in (FAT_MAGIC, MH_MAGIC, MH_CIGAM, MH_CIGAM_64):
          return machofile(file, list(initial_rpaths_transitive))
@@ -348,4 +351,5 @@ index 24d0208..18f02f6 100755
          return inscrutablefile(file, list(initial_rpaths_transitive))
  
 -- 
-2.10.1
+2.20.1
+
