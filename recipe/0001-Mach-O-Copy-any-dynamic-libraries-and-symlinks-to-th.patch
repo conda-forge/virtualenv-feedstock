@@ -1,58 +1,61 @@
-From 2af7f9f9a0fb4e6043fbf71158f3b386d44ad871 Mon Sep 17 00:00:00 2001
-From: Ray Donnelly <mingw.android@gmail.com>
-Date: Thu, 9 Feb 2017 19:21:55 +0000
-Subject: [PATCH 1/2] Mach-O: Copy any dynamic libraries and symlinks to the
+From 258a0b764df7e085ab46785cab7b07ec52d07d4c Mon Sep 17 00:00:00 2001
+From: William Jamir Silva <williamjamir@gmail.com>
+Date: Sun, 2 Jun 2019 21:11:26 -0300
+Subject: [PATCH 1/2] Mach-O: Copy any dynamic libraries and symlinks to the 
  correct relative location
 
 This is done exhaustively (i.e. recursively). Files that would end
 up being located outside of home_dir are not copied to prevent any
 security issues. An implementation for elf will be added soon.
+
+Patche original created by:
+    From: Ray Donnelly <mingw.android@gmail.com>
+    Date: Thu, 9 Feb 2017 19:21:55 +0000
 ---
- virtualenv.py | 324 +++++++++++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 275 insertions(+), 49 deletions(-)
+ virtualenv.py | 325 ++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 275 insertions(+), 50 deletions(-)
 
 diff --git a/virtualenv.py b/virtualenv.py
-index 8f29a04..24d0208 100755
+index cd76bf6..e888429 100755
 --- a/virtualenv.py
 +++ b/virtualenv.py
-@@ -1228,7 +1228,7 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear, sy
+@@ -1475,7 +1475,7 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear, sy
      if sys.executable != py_executable:
-         ## FIXME: could I just hard link?
+         # FIXME: could I just hard link?
          executable = sys.executable
 -        shutil.copyfile(executable, py_executable)
 +        copy_exe_shared_libs_and_symlinks(executable, py_executable, home_dir)
          make_exe(py_executable)
-         if is_win or is_cygwin:
-             pythonw = os.path.join(os.path.dirname(sys.executable), 'pythonw.exe')
-@@ -2183,6 +2183,11 @@ g6Hgf7WBt6lzMeiyyWVn3P1WVbwaczHmTzE9A5SyItTVgFYyvs/L/fXlaNgbw8v3azT+0eikVlWD
- MZWF36ryyXXf3yBIz6nzqz8Muyz0m5Qj7OexfYo/Ph3LqvkHUg7AuA==
- """)
+         if IS_WIN or IS_CYGWIN:
+             python_w = os.path.join(os.path.dirname(sys.executable), "pythonw.exe")
+@@ -2440,6 +2440,10 @@ MZWF36ryyXXf3yBIz6nzqz8Muyz0m5Qj7OexfYo/Ph3LqvkHUg7AuA==
+ """
+ )
  
-+
 +##############################################
 +# Constants used in the Mach-O specification #
 +##############################################
 +
- MH_MAGIC = 0xfeedface
- MH_CIGAM = 0xcefaedfe
- MH_MAGIC_64 = 0xfeedfacf
-@@ -2191,6 +2196,8 @@ FAT_MAGIC = 0xcafebabe
- BIG_ENDIAN = '>'
- LITTLE_ENDIAN = '<'
- LC_LOAD_DYLIB = 0xc
+ MH_MAGIC = 0xFEEDFACE
+ MH_CIGAM = 0xCEFAEDFE
+ MH_MAGIC_64 = 0xFEEDFACF
+@@ -2448,6 +2452,8 @@ FAT_MAGIC = 0xCAFEBABE
+ BIG_ENDIAN = ">"
+ LITTLE_ENDIAN = "<"
+ LC_LOAD_DYLIB = 0xC
 +LC_REQ_DYLD = 0x80000000
 +LC_RPATH = 0x1c | LC_REQ_DYLD
- maxint = majver == 3 and getattr(sys, 'maxsize') or getattr(sys, 'maxint')
+ maxint = MAJOR == 3 and getattr(sys, "maxsize") or getattr(sys, "maxint")
  
  
-@@ -2265,63 +2272,282 @@ def read_data(file, endian, num=1):
+@@ -2521,6 +2527,97 @@ def read_data(file, endian, num=1):
+         return res[0]
      return res
  
- 
 +def replace_lc_load_dylib(file, where, bits, endian, cmd, cmdsize, what, value):
-+    if cmd == LC_LOAD_DYLIB:
-+        # The first data field in LC_LOAD_DYLIB commands is the
-+        # offset of the name, starting from the beginning of the
++   if cmd == LC_LOAD_DYLIB:
++       # The first data field in LC_LOAD_DYLIB commands is the
++       # offset of the name, starting from the beginning of the
 +        # command.
 +        name_offset = read_data(file, endian)
 +        file.seek(where + name_offset, os.SEEK_SET)
@@ -140,23 +143,24 @@ index 8f29a04..24d0208 100755
 +        results.append(do_macho(file, 64, LITTLE_ENDIAN, lc_operation, *args))
 +
 +
- def mach_o_change(path, what, value):
+ 
+ def mach_o_change(at_path, what, value):
      """
-     Replace a given name (what) in any LC_LOAD_DYLIB command found in
+@@ -2528,57 +2625,185 @@ def mach_o_change(at_path, what, value):
      the given binary with a new name (value), provided it's shorter.
      """
  
 -    def do_macho(file, bits, endian):
 -        # Read Mach-O header (the magic number is assumed read by the caller)
--        cputype, cpusubtype, filetype, ncmds, sizeofcmds, flags = read_data(file, endian, 6)
+-        cpu_type, cpu_sub_type, file_type, n_commands, size_of_commands, flags = read_data(file, endian, 6)
 -        # 64-bits header has one more field.
 -        if bits == 64:
 -            read_data(file, endian)
--        # The header is followed by ncmds commands
--        for n in range(ncmds):
+-        # The header is followed by n commands
+-        for _ in range(n_commands):
 -            where = file.tell()
 -            # Read command header
--            cmd, cmdsize = read_data(file, endian, 2)
+-            cmd, cmd_size = read_data(file, endian, 2)
 -            if cmd == LC_LOAD_DYLIB:
 -                # The first data field in LC_LOAD_DYLIB commands is the
 -                # offset of the name, starting from the beginning of the
@@ -164,25 +168,25 @@ index 8f29a04..24d0208 100755
 -                name_offset = read_data(file, endian)
 -                file.seek(where + name_offset, os.SEEK_SET)
 -                # Read the NUL terminated string
--                load = file.read(cmdsize - name_offset).decode()
--                load = load[:load.index('\0')]
+-                load = file.read(cmd_size - name_offset).decode()
+-                load = load[: load.index("\0")]
 -                # If the string is what is being replaced, overwrite it.
 -                if load == what:
 -                    file.seek(where + name_offset, os.SEEK_SET)
--                    file.write(value.encode() + '\0'.encode())
+-                    file.write(value.encode() + "\0".encode())
 -            # Seek to the next command
--            file.seek(where + cmdsize, os.SEEK_SET)
+-            file.seek(where + cmd_size, os.SEEK_SET)
 -
 -    def do_file(file, offset=0, size=maxint):
--        file = fileview(file, offset, size)
+-        file = FileView(file, offset, size)
 -        # Read magic number
 -        magic = read_data(file, BIG_ENDIAN)
 -        if magic == FAT_MAGIC:
 -            # Fat binaries contain nfat_arch Mach-O binaries
--            nfat_arch = read_data(file, BIG_ENDIAN)
--            for n in range(nfat_arch):
+-            n_fat_arch = read_data(file, BIG_ENDIAN)
+-            for _ in range(n_fat_arch):
 -                # Read arch header
--                cputype, cpusubtype, offset, size, align = read_data(file, BIG_ENDIAN, 5)
+-                cpu_type, cpu_sub_type, offset, size, align = read_data(file, BIG_ENDIAN, 5)
 -                do_file(file, offset, size)
 -        elif magic == MH_MAGIC:
 -            do_macho(file, 32, BIG_ENDIAN)
@@ -193,11 +197,12 @@ index 8f29a04..24d0208 100755
 -        elif magic == MH_CIGAM_64:
 -            do_macho(file, 64, LITTLE_ENDIAN)
 -
-     assert(len(what) >= len(value))
+     assert len(what) >= len(value)
  
-+    results = []
-     with open(path, 'r+b') as f:
+-    with open(at_path, "r+b") as f:
 -        do_file(f)
++    results = []
++    with open(path, 'r+b') as f:
 +        do_file(f, replace_lc_load_dylib, offset_size(), results, what, value)
 +    return results
 +
@@ -375,6 +380,7 @@ index 8f29a04..24d0208 100755
 +            shutil.copyfile(src, dst)
  
  
- if __name__ == '__main__':
+ if __name__ == "__main__":
 -- 
-2.10.1
+2.20.1
+
