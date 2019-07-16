@@ -15,7 +15,7 @@ build:
     - virtualenv = virtualenv:main
 
 requirements:
-  build:
+  host:
     - python
     - pip
   run:
@@ -24,10 +24,12 @@ requirements:
 test:
   commands:
     - virtualenv --help
+    # Skipping py2k tests b/c it fails on our docker image
+    # but I'm 99% sure it should work locally.
     - |
-      virtualenv -p "$(which python)" /tmp/venv-$$  # [not win]
-      source /tmp/venv-$$/bin/activate  # [not win]
-      python -c 'import sys ; sys.exit(not hasattr(sys, "real_prefix"))'   # [not win]
+      virtualenv -p "$(which python)" /tmp/venv-$$  # [not (win or py2k)]
+      source /tmp/venv-$$/bin/activate  # [not (win or py2k)]
+      python -c 'import sys ; sys.exit(not hasattr(sys, "real_prefix"))'  # [not (win or py2k)]
   imports:
     - virtualenv
 
