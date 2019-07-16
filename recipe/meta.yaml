@@ -7,9 +7,6 @@ package:
 source:
   url: https://github.com/pypa/virtualenv/archive/{{ version }}.tar.gz
   sha256: 2eed2691918a26e0cac77ed0ed5d473965d9caee1466afa0511390dd35b9ac4b
-  patches:
-    - 0001-Mach-O-Copy-any-dynamic-libraries-and-symlinks-to-th.patch
-    - 0002-ELF-Copy-any-dynamic-libraries-and-symlinks-to-the-c.patch
 
 build:
   number: 0
@@ -28,9 +25,9 @@ test:
   commands:
     - virtualenv --help
     - |
-      virtualenv -p "$(which python)" /tmp/venv-$$                                # [not win]
-      source /tmp/venv-$$/bin/activate                                            # [not win]
-      python -c 'import sys ; sys.exit(not hasattr(sys, "real_prefix"))'          # [not win]
+      virtualenv -p "$(which python)" /tmp/venv-$$  # [not win]
+      source /tmp/venv-$$/bin/activate  # [not win]
+      python -c 'import sys ; sys.exit(not hasattr(sys, "real_prefix"))'   # [not win]
   imports:
     - virtualenv
 
