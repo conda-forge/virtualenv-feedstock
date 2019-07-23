@@ -1,4 +1,4 @@
-{% set version = "16.6.2" %}
+{% set version = "16.7.0" %}
 
 package:
   name: virtualenv
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/pypa/virtualenv/archive/{{ version }}.tar.gz
-  sha256: 2eed2691918a26e0cac77ed0ed5d473965d9caee1466afa0511390dd35b9ac4b
+  sha256: d043432fdd2ac244d7fa40d7fa08323831cec411e83d7658b051c681b3e4b2ce
 
 build:
   number: 0
