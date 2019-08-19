@@ -1,25 +1,23 @@
-From 258a0b764df7e085ab46785cab7b07ec52d07d4c Mon Sep 17 00:00:00 2001
-From: William Jamir Silva <williamjamir@gmail.com>
+From 4bee3f3db358956e3d94e64ec37abc3de8a04951 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 2 Jun 2019 21:11:26 -0300
-Subject: [PATCH 1/2] Mach-O: Copy any dynamic libraries and symlinks to the 
+Subject: [PATCH 1/2] Mach-O: Copy any dynamic libraries and symlinks to the
  correct relative location
 
 This is done exhaustively (i.e. recursively). Files that would end
 up being located outside of home_dir are not copied to prevent any
 security issues. An implementation for elf will be added soon.
 
-Patche original created by:
-    From: Ray Donnelly <mingw.android@gmail.com>
-    Date: Thu, 9 Feb 2017 19:21:55 +0000
+PEP-8 and small fixes by Nicola Soranzo <nicola.soranzo@earlham.ac.uk>, 2019-08-19
 ---
  virtualenv.py | 325 ++++++++++++++++++++++++++++++++++++++++++--------
  1 file changed, 275 insertions(+), 50 deletions(-)
 
 diff --git a/virtualenv.py b/virtualenv.py
-index cd76bf6..e888429 100755
+index 8f05739..a6bd076 100755
 --- a/virtualenv.py
 +++ b/virtualenv.py
-@@ -1475,7 +1475,7 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear, sy
+@@ -1523,7 +1523,7 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear, sy
      if sys.executable != py_executable:
          # FIXME: could I just hard link?
          executable = sys.executable
@@ -28,7 +26,7 @@ index cd76bf6..e888429 100755
          make_exe(py_executable)
          if IS_WIN or IS_CYGWIN:
              python_w = os.path.join(os.path.dirname(sys.executable), "pythonw.exe")
-@@ -2440,6 +2440,10 @@ MZWF36ryyXXf3yBIz6nzqz8Muyz0m5Qj7OexfYo/Ph3LqvkHUg7AuA==
+@@ -2490,6 +2490,10 @@ MZWF36ryyXXf3yBIz6nzqz8Muyz0m5Qj7OexfYo/Ph3LqvkHUg7AuA==
  """
  )
  
@@ -39,7 +37,7 @@ index cd76bf6..e888429 100755
  MH_MAGIC = 0xFEEDFACE
  MH_CIGAM = 0xCEFAEDFE
  MH_MAGIC_64 = 0xFEEDFACF
-@@ -2448,6 +2452,8 @@ FAT_MAGIC = 0xCAFEBABE
+@@ -2498,6 +2502,8 @@ FAT_MAGIC = 0xCAFEBABE
  BIG_ENDIAN = ">"
  LITTLE_ENDIAN = "<"
  LC_LOAD_DYLIB = 0xC
@@ -48,14 +46,14 @@ index cd76bf6..e888429 100755
  maxint = MAJOR == 3 and getattr(sys, "maxsize") or getattr(sys, "maxint")
  
  
-@@ -2521,6 +2527,97 @@ def read_data(file, endian, num=1):
-         return res[0]
+@@ -2572,63 +2578,282 @@ def read_data(file, endian, num=1):
      return res
  
+ 
 +def replace_lc_load_dylib(file, where, bits, endian, cmd, cmdsize, what, value):
-+   if cmd == LC_LOAD_DYLIB:
-+       # The first data field in LC_LOAD_DYLIB commands is the
-+       # offset of the name, starting from the beginning of the
++    if cmd == LC_LOAD_DYLIB:
++        # The first data field in LC_LOAD_DYLIB commands is the
++        # offset of the name, starting from the beginning of the
 +        # command.
 +        name_offset = read_data(file, endian)
 +        file.seek(where + name_offset, os.SEEK_SET)
@@ -123,7 +121,7 @@ index cd76bf6..e888429 100755
 +
 +
 +def do_file(file, lc_operation, off_sz, results, *args):
-+    file = fileview(file, off_sz.offset, off_sz.size)
++    file = FileView(file, off_sz.offset, off_sz.size)
 +    # Read magic number
 +    magic = read_data(file, BIG_ENDIAN)
 +    if magic == FAT_MAGIC:
@@ -143,10 +141,9 @@ index cd76bf6..e888429 100755
 +        results.append(do_macho(file, 64, LITTLE_ENDIAN, lc_operation, *args))
 +
 +
- 
  def mach_o_change(at_path, what, value):
      """
-@@ -2528,57 +2625,185 @@ def mach_o_change(at_path, what, value):
+     Replace a given name (what) in any LC_LOAD_DYLIB command found in
      the given binary with a new name (value), provided it's shorter.
      """
  
@@ -310,7 +307,7 @@ index cd76bf6..e888429 100755
 +
 +
 +def codefile(file, initial_rpaths_transitive=[]):
-+    magic, = struct.unpack(BIG_ENDIAN+'L', file.read(4))
++    magic, = struct.unpack(BIG_ENDIAN + 'L', file.read(4))
 +    file.seek(0)
 +    if magic in (FAT_MAGIC, MH_MAGIC, MH_CIGAM, MH_CIGAM_64):
 +        return machofile(file, list(initial_rpaths_transitive))
@@ -329,15 +326,15 @@ index cd76bf6..e888429 100755
 +    dsts = [exe_dst]
 +    all_srcs = set(srcs)
 +    all_done = set()
-+    dir_exe_src = os.path.dirname(exe_src)+os.sep
-+    dir_exe_dst = os.path.dirname(exe_dst)+os.sep
++    dir_exe_src = os.path.dirname(exe_src) + os.sep
++    dir_exe_dst = os.path.dirname(exe_dst) + os.sep
 +    src_to_dst_rpath = dict({exe_src: (exe_dst, [])})
 +    rpaths = []
 +    while all_srcs != all_done:
 +        for src in all_srcs - all_done:
 +            dst, rpaths = src_to_dst_rpath[src]
-+            dir_src = os.path.dirname(src)+os.sep
-+            dir_dst = os.path.dirname(dst)+os.sep
++            dir_src = os.path.dirname(src) + os.sep
++            dir_dst = os.path.dirname(dst) + os.sep
 +            with open(src, 'rb') as f:
 +                new_srcs = set()
 +                of = codefile(f, rpaths)
@@ -375,12 +372,12 @@ index cd76bf6..e888429 100755
 +            print('copying {} => {}'.format(src, dst))
 +            try:
 +                os.makedirs(os.path.dirname(dst))
-+            except:
++            except Exception:
 +                pass
 +            shutil.copyfile(src, dst)
  
  
  if __name__ == "__main__":
 -- 
-2.20.1
+2.17.1
 
