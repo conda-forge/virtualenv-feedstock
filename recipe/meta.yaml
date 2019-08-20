@@ -7,10 +7,13 @@ package:
 source:
   url: https://github.com/pypa/virtualenv/archive/{{ version }}.tar.gz
   sha256: 74eb96b4e1eb08fbe37b5c6fbad9c978e1c9461013378f5df7637c2d8eccb18e
+  patches:
+    - 0001-Mach-O-Copy-any-dynamic-libraries-and-symlinks-to-th.patch
+    - 0002-ELF-Copy-any-dynamic-libraries-and-symlinks-to-the-c.patch
 
 build:
   noarch: python
-  number: 0
+  number: 1
   script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv"
   entry_points:
     - virtualenv = virtualenv:main
@@ -28,9 +31,9 @@ test:
     # Skipping py2k tests b/c it fails on our docker image
     # but I'm 99% sure it should work locally.
     - |
-      virtualenv -p "$(which python)" /tmp/venv-$$  # [not (win or py2k)]
-      source /tmp/venv-$$/bin/activate  # [not (win or py2k)]
-      python -c 'import sys ; sys.exit(not hasattr(sys, "real_prefix"))'  # [not (win or py2k)]
+      virtualenv -p "$(which python)" /tmp/venv-$$  # [not win]
+      source /tmp/venv-$$/bin/activate  # [not win]
+      python -c 'import sys ; sys.exit(not hasattr(sys, "real_prefix"))'  # [not win]
   imports:
     - virtualenv
 
