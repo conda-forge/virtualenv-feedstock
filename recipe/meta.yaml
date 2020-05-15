@@ -1,46 +1,54 @@
-{% set version = "20.0.4" %}
+{% set version = "20.0.20" %}
 
 package:
   name: virtualenv
   version: {{ version }}
 
 source:
-  url: https://github.com/pypa/virtualenv/archive/{{ version }}.tar.gz
-  sha256: 6af7af7f73b57487b933e3a7811dbfe00aa9cad2fd3e1d6f93c29c5335104614
-  patches:
-    - 0001-Mach-O-Copy-any-dynamic-libraries-and-symlinks-to-th.patch
-    - 0002-ELF-Copy-any-dynamic-libraries-and-symlinks-to-the-c.patch
+  git_url: https://github.com/pypa/virtualenv.git
+  git_rev: {{ version }}
 
 build:
-  noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv
+  script: {{ PYTHON }} -m pip install . -vv
   entry_points:
-    - virtualenv = virtualenv:main
+    - virtualenv = virtualenv.__main__:run_with_catch
 
 requirements:
   host:
     - python
-    - pip
+    - pip >=18
+    - setuptools >=41
+    - setuptools_scm >=2
   run:
     - python
+    - appdirs >=1.4.3,<2
+    - distlib >=0.3.0,<1
+    - filelock >=3.0.0,<4
+    - six >=1.9.0,<2   # keep it >=1.9.0 as it may cause problems on LTS platforms
+    - contextlib2 >=0.6.0,<1  # [py<33]
+    - importlib-metadata >=0.12,<2  # [py<38]
+    - importlib_resources >=1.0,<2  # [py<37]
+    - pathlib2 >=2.3.3,<3  # [py<34 and not win]
 
 test:
   commands:
     - virtualenv --help
-    # Skipping py2k tests b/c it fails on our docker image
-    # but I'm 99% sure it should work locally.
     - |
-      virtualenv -p "$(which python)" /tmp/venv-$$  # [not win]
-      source /tmp/venv-$$/bin/activate  # [not win]
-      python -c 'import sys ; sys.exit(not hasattr(sys, "real_prefix"))'  # [not win]
+      virtualenv .env  # [not win]
+      source .env/bin/activate  # [not win]
+
+      virtualenv .env  # [win]
+      .env/scripts/activate  # [win]
+
+      python -c 'import sys ; sys.exit(not hasattr(sys, "real_prefix"))'
   imports:
     - virtualenv
 
 about:
   home: https://virtualenv.pypa.io/
   license: MIT
-  license_file: LICENSE.txt
+  license_file: LICENSE
   summary: Virtual Python Environment builder
   description: |
     virtualenv is a tool to create isolated Python environments.
