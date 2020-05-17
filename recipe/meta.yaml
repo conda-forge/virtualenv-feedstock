@@ -37,9 +37,11 @@ test:
     - |
       virtualenv .env  # [not win]
       source .env/bin/activate  # [not win]
+      which python  # [not win]
 
       virtualenv .env  # [win]
       .env/scripts/activate  # [win]
+      where python  # [win]
 
       python -c 'import sys ; sys.exit(not hasattr(sys, "real_prefix"))'
   imports:
