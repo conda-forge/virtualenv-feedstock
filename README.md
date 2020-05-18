@@ -9,7 +9,7 @@ Feedstock license: BSD 3-Clause
 
 Summary: Virtual Python Environment builder
 
-virtualenv is a tool to create isolated Python environments.
+A tool for creating isolated virtual python environments.
 
 
 Current build status
