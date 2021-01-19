@@ -29,7 +29,7 @@ requirements:
     - appdirs >=1.4.3,<2
     - distlib >=0.3.0,<1
     - filelock >=3.0.0,<4
-    - importlib-metadata >=0.12,<3  # [py<38]
+    - importlib-metadata >=0.12  # [py<38]
     - importlib_resources >=1.0  # [py<37]
     - pathlib2 >=2.3.3,<3  # [py<34 and not win]
     - six >=1.9.0,<2   # keep it >=1.9.0 as it may cause problems on LTS platforms
