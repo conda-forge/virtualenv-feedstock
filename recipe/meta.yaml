@@ -26,7 +26,7 @@ requirements:
   run:
     - python
     - appdirs >=1.4.3,<2
-    - distlib >=0.3.0,<1
+    - distlib >=0.3.1,<1
     - filelock >=3.0.0,<4
     - importlib-metadata >=0.12  # [py<38]
     - importlib_resources >=1.0  # [py<37]
