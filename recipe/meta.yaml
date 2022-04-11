@@ -1,4 +1,4 @@
-{% set version = "20.14.0" %}
+{% set version = "20.14.1" %}
 
 package:
   name: virtualenv
@@ -6,10 +6,10 @@ package:
 
 source:
   url: https://pypi.io/packages/source/v/virtualenv/virtualenv-{{ version }}.tar.gz
-  sha256: 8e5b402037287126e81ccde9432b95a8be5b19d36584f64957060a3488c11ca8
+  sha256: ef589a79795589aada0c1c5b319486797c03b67ac3984c48c669c0e4f50df3a5
 
 build:
-  number: 1
+  number: 0
   script: {{ PYTHON }} -m pip install . -vv
   entry_points:
     - virtualenv = virtualenv.__main__:run_with_catch
