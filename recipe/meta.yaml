@@ -9,7 +9,7 @@ source:
   sha256: d86ea0bb50e06252d79e6c241507cb904fcd66090c3271381372d6221a3970f9
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . -vv
   entry_points:
     - virtualenv = virtualenv.__main__:run_with_catch
@@ -21,15 +21,14 @@ requirements:
   host:
     - python
     - pip >=18
-    - setuptools >=41
-    - setuptools_scm >=2
+    - setuptools >=59.6
+    - setuptools_scm >=6.4.2
   run:
     - python
-    - distlib >=0.3.1,<1
-    - filelock >=3.2,<4
-    - platformdirs >=2,<3
-    - six >=1.9.0,<2
-    - importlib-metadata >=0.12  # [py<38]
+    - distlib >=0.3.5,<1
+    - filelock >=3.4.1,<4
+    - platformdirs >=2.4,<3
+    - importlib-metadata >=4.8.3  # [py<38]
 
 test:
   imports:
