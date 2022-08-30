@@ -29,7 +29,7 @@ requirements:
     - filelock >=3.4.1,<4
     - platformdirs >=2.4,<3
     - importlib-metadata >=4.8.3  # [py<38]
-    - importlib-resources >=5.4  #  [py<37]
+    - importlib-resources >=5.4  # [py<37]
 
 test:
   imports:
