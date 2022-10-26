@@ -9,7 +9,7 @@ source:
   sha256: 227ea1b9994fdc5ea31977ba3383ef296d7472ea85be9d6732e42a91c04e80da
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . -vv
   entry_points:
     - virtualenv = virtualenv.__main__:run_with_catch
