@@ -12,23 +12,21 @@ source:
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv
+  noarch: python
   entry_points:
     - virtualenv = virtualenv.__main__:run_with_catch
 
 requirements:
-  build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
   host:
-    - python
+    - python >=3.7
     - hatch-vcs >=0.3
     - hatchling >=1.12.2
     - pip
   run:
-    - python
+    - python >=3.7
     - distlib <1,>=0.3.6
     - filelock <4,>=3.4.1
-    - importlib-metadata >=4.8.3  # [py<38]
+    - importlib-metadata >=4.8.3
     - platformdirs <3,>=2.4
 
 test:
