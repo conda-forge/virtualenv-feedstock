@@ -1,5 +1,5 @@
 {% set name = "virtualenv" %}
-{% set version = "20.17.1" %}
+{% set version = "20.18.0" %}
 
 package:
   name: virtualenv
@@ -7,30 +7,27 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/virtualenv-{{ version }}.tar.gz
-  sha256: f8b927684efc6f1cc206c9db297a570ab9ad0e51c16fa9e45487d36d1905c058
+  sha256: f262457a4d7298a6b733b920a196bf8b46c8af15bf1fd9da7142995eff15118e
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv
+  noarch: python
   entry_points:
     - virtualenv = virtualenv.__main__:run_with_catch
 
 requirements:
-  build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
   host:
-    - python
-    - pip >=18
-    - setuptools >=59.6
-    - setuptools_scm >=6.4.2
+    - python >=3.7
+    - hatch-vcs >=0.3
+    - hatchling >=1.12.2
+    - pip
   run:
-    - python
-    - distlib >=0.3.6,<1
-    - filelock >=3.4.1,<4
-    - platformdirs >=2.4,<3
-    - importlib-metadata >=4.8.3  # [py<38]
-    - importlib-resources >=5.4  # [py<37]
+    - python >=3.7
+    - distlib <1,>=0.3.6
+    - filelock <4,>=3.4.1
+    - importlib-metadata >=4.8.3
+    - platformdirs <3,>=2.4
 
 test:
   imports:
@@ -44,9 +41,9 @@ test:
 
 about:
   home: https://virtualenv.pypa.io/
+  summary: Virtual Python Environment builder
   license: MIT
   license_file: LICENSE
-  summary: Virtual Python Environment builder
   description: |
     A tool for creating isolated virtual python environments.
   doc_url: https://virtualenv.pypa.io/en/latest/
