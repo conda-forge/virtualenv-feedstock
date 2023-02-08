@@ -27,7 +27,7 @@ requirements:
     - distlib <1,>=0.3.6
     - filelock <4,>=3.4.1
     - importlib-metadata >=4.8.3
-    - platformdirs <3,>=2.4
+    - platformdirs <4,>=2.4
 
 test:
   imports:
