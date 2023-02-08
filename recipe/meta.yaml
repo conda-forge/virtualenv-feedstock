@@ -1,5 +1,5 @@
 {% set name = "virtualenv" %}
-{% set version = "20.18.0" %}
+{% set version = "20.19.0" %}
 
 package:
   name: virtualenv
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/virtualenv-{{ version }}.tar.gz
-  sha256: f262457a4d7298a6b733b920a196bf8b46c8af15bf1fd9da7142995eff15118e
+  sha256: 37a640ba82ed40b226599c522d411e4be5edb339a0c0de030c0dc7b646d61590
 
 build:
   number: 0
@@ -27,7 +27,7 @@ requirements:
     - distlib <1,>=0.3.6
     - filelock <4,>=3.4.1
     - importlib-metadata >=4.8.3
-    - platformdirs <3,>=2.4
+    - platformdirs <4,>=2.4
 
 test:
   imports:
