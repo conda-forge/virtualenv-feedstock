@@ -18,16 +18,16 @@ build:
 
 requirements:
   host:
-    - python >=3.7
+    - python >=3.8
     - hatch-vcs >=0.3
     - hatchling >=1.14
     - pip
   run:
-    - python >=3.7
+    # dropping python 3.7 lets us drop importlib-metadata
+    - python >=3.8
     - distlib <1,>=0.3.6
-    - filelock <4,>=3.4.1
-    - importlib-metadata >=4.8.3
-    - platformdirs <4,>=2.4
+    - filelock <4,>=3.11
+    - platformdirs <4,>=3.2
 
 test:
   imports:
