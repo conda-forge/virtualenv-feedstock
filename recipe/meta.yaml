@@ -1,5 +1,5 @@
 {% set name = "virtualenv" %}
-{% set version = "20.21.1" %}
+{% set version = "20.22.0" %}
 
 package:
   name: virtualenv
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/virtualenv-{{ version }}.tar.gz
-  sha256: 4c104ccde994f8b108163cf9ba58f3d11511d9403de87fb9b4f52bf33dbc8668
+  sha256: 278753c47aaef1a0f14e6db8a4c5e1e040e90aea654d0fc1dc7e0d8a42616cc3
 
 build:
   number: 0
@@ -18,16 +18,16 @@ build:
 
 requirements:
   host:
-    - python >=3.7
+    - python >=3.8
     - hatch-vcs >=0.3
     - hatchling >=1.14
     - pip
   run:
-    - python >=3.7
+    # dropping python 3.7 lets us drop importlib-metadata
+    - python >=3.8
     - distlib <1,>=0.3.6
-    - filelock <4,>=3.4.1
-    - importlib-metadata >=4.8.3
-    - platformdirs <4,>=2.4
+    - filelock <4,>=3.11
+    - platformdirs <4,>=3.2
 
 test:
   imports:
