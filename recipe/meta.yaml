@@ -23,7 +23,6 @@ requirements:
     - hatchling >=1.17.1
     - pip
   run:
-    # dropping python 3.7 lets us drop importlib-metadata
     - python >=3.8
     - distlib <1,>=0.3.7
     - filelock <4,>=3.12.2
