@@ -1,5 +1,5 @@
 {% set name = "virtualenv" %}
-{% set version = "20.25.2" %}
+{% set version = "20.25.3" %}
 
 package:
   name: virtualenv
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/virtualenv-{{ version }}.tar.gz
-  sha256: fa7edb8428620518010928242ec17aa7132ae435319c29c1651d1cf4c4173aad
+  sha256: 7bb554bbdfeaacc3349fa614ea5bff6ac300fc7c335e9facf3a3bcfc703f45be
 
 build:
   number: 0
