@@ -23,7 +23,7 @@ requirements:
     - hatchling >=1.17.1
     - pip
   run:
-    # python >=3.8 so we don't need importlib-metadat
+    # python >=3.8 so we don't need importlib-metadata
     - python >=3.8
     - distlib <1,>=0.3.7
     - filelock <4,>=3.12.2
