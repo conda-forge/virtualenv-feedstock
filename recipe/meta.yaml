@@ -1,5 +1,5 @@
 {% set name = "virtualenv" %}
-{% set version = "20.26.5" %}
+{% set version = "20.26.6" %}
 
 package:
   name: virtualenv
@@ -7,11 +7,11 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/virtualenv-{{ version }}.tar.gz
-  sha256: ce489cac131aa58f4b25e321d6d186171f78e6cb13fafbf32a840cee67733ff4
+  sha256: 280aede09a2a5c317e409a00102e7077c6432c5a38f0ef938e643805a7ad2c48
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   noarch: python
   entry_points:
     - virtualenv = virtualenv.__main__:run_with_catch
@@ -23,6 +23,7 @@ requirements:
     - hatchling >=1.17.1
     - pip
   run:
+    # python >=3.8 so we don't need importlib-metadata
     - python >=3.8
     - distlib <1,>=0.3.7
     - filelock <4,>=3.12.2
