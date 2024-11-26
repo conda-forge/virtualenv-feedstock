@@ -18,13 +18,12 @@ build:
 
 requirements:
   host:
-    - python >=3.8
+    - python {{ python_min }}
     - hatch-vcs >=0.3
     - hatchling >=1.17.1
     - pip
   run:
-    # python >=3.8 so we don't need importlib-metadata
-    - python >=3.8
+    - python >={{ python_min }}
     - distlib >=0.3.7,<1
     - filelock >=3.12.2,<4
     - platformdirs >=3.9.1,<5
@@ -37,6 +36,7 @@ test:
     - pip check
     - virtualenv --help
   requires:
+    - python {{ python_min }}
     - pip
 
 about:
