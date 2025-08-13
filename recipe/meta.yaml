@@ -1,5 +1,5 @@
 {% set name = "virtualenv" %}
-{% set version = "20.33.1" %}
+{% set version = "20.34.0" %}
 
 package:
   name: virtualenv
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/virtualenv-{{ version }}.tar.gz
-  sha256: 1b44478d9e261b3fb8baa5e74a0ca3bc0e05f21aa36167bf9cbf850e542765b8
+  sha256: 44815b2c9dee7ed86e387b842a84f20b93f7f417f95886ca1996a72a4138eb1a
 
 build:
   number: 0
@@ -23,6 +23,7 @@ requirements:
     - hatchling >=1.17.1
     - pip
   run:
+    - typing_extensions >=4.13.2
     - python >={{ python_min }}
     - distlib >=0.3.7,<1
     - filelock >=3.12.2,<4
