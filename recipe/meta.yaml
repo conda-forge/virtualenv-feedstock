@@ -1,5 +1,5 @@
 {% set name = "virtualenv" %}
-{% set version = "20.36.1" %}
+{% set version = "20.37.0" %}
 
 package:
   name: virtualenv
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/virtualenv-{{ version }}.tar.gz
-  sha256: 8befb5c81842c641f8ee658481e42641c68b5eab3521d8e092d18320902466ba
+  sha256: 6f7e2064ed470aa7418874e70b6369d53b66bcd9e9fd5389763e96b6c94ccb7c
 
 build:
   number: 0
@@ -23,11 +23,12 @@ requirements:
     - hatchling >=1.17.1
     - pip
   run:
-    - typing_extensions >=4.13.2
     - python >={{ python_min }}
     - distlib >=0.3.7,<1
-    - filelock >=3.20.1,<4
+    - filelock >=3.24.2,<4
     - platformdirs >=3.9.1,<5
+    # only needed for py < 3.11 but we want to stay noarch: python 
+    - typing_extensions >=4.13.2
 
 test:
   imports:
