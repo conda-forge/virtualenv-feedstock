@@ -15,7 +15,6 @@ Documentation: https://virtualenv.pypa.io/en/latest/
 
 A tool for creating isolated virtual python environments.
 
-
 Current build status
 ====================
 
