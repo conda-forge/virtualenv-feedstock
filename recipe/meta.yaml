@@ -23,12 +23,12 @@ requirements:
     - hatchling >=1.17.1
     - pip
   run:
-    - importlib-metadata >=6.6
-    - typing_extensions >=4.13.2
     - python >={{ python_min }}
     - distlib >=0.3.7,<1
-    - filelock >=3.20.1,<4
+    - filelock >=3.24.2,<4
     - platformdirs >=3.9.1,<5
+    # only needed for py < 3.11 but we want to stay noarch: python 
+    - typing_extensions >=4.13.2
 
 test:
   imports:
