@@ -1,0 +1,65 @@
+schema_version: 1
+
+context:
+  name: virtualenv
+  version: 20.37.0
+
+package:
+  name: virtualenv
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/virtualenv-${{ version }}.tar.gz
+  sha256: 6f7e2064ed470aa7418874e70b6369d53b66bcd9e9fd5389763e96b6c94ccb7c
+
+build:
+  number: 1
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  python:
+    entry_points:
+      - virtualenv = virtualenv.__main__:run_with_catch
+
+requirements:
+  host:
+    - python ${{ python_min }}.*
+    - hatch-vcs >=0.3
+    - hatchling >=1.17.1
+    - pip
+  run:
+    - python >=${{ python_min }}
+    - distlib >=0.3.7,<1
+    - filelock >=3.24.2,<4
+    - platformdirs >=3.9.1,<5
+    # only needed for py < 3.11 but we want to stay noarch: python
+    - typing_extensions >=4.13.2
+
+tests:
+  - python:
+      imports:
+        - virtualenv
+        - virtualenv.activation
+      python_version: ${{ python_min }}.*
+  - requirements:
+      run:
+        - python ${{ python_min }}.*
+        - pip
+    script:
+      - pip check
+      - virtualenv --help
+
+about:
+  summary: Virtual Python Environment builder
+  license: MIT
+  license_file: LICENSE
+  description: |
+    A tool for creating isolated virtual python environments.
+  homepage: https://virtualenv.pypa.io/
+  repository: https://github.com/pypa/virtualenv
+  documentation: https://virtualenv.pypa.io/en/latest/
+
+extra:
+  recipe-maintainers:
+    - mingwandroid
+    - kalefranz
+    - xylar
