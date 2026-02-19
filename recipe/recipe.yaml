@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: virtualenv
-  version: 20.37.0
+  version: 20.38.0
 
 package:
   name: virtualenv
@@ -10,10 +10,10 @@ package:
 
 source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/virtualenv-${{ version }}.tar.gz
-  sha256: 6f7e2064ed470aa7418874e70b6369d53b66bcd9e9fd5389763e96b6c94ccb7c
+  sha256: 94f39b1abaea5185bf7ea5a46702b56f1d0c9aa2f41a6c2b8b0af4ddc74c10a7
 
 build:
-  number: 1
+  number: 0
   noarch: python
   script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   python:
@@ -29,11 +29,10 @@ requirements:
   run:
     - python >=${{ python_min }}
     - distlib >=0.3.7,<1
-    - filelock >=3.24.2,<4
     - platformdirs >=3.9.1,<5
-    # only needed for py < 3.11 but we want to stay noarch: python
     - typing_extensions >=4.13.2
-
+    - importlib-metadata >=6.6
+    - filelock >=3.24.2,<4
 tests:
   - python:
       imports:
