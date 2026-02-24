@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: virtualenv
-  version: 20.38.0
+  version: 20.39.0
 
 package:
   name: virtualenv
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/virtualenv-${{ version }}.tar.gz
-  sha256: 94f39b1abaea5185bf7ea5a46702b56f1d0c9aa2f41a6c2b8b0af4ddc74c10a7
+  sha256: a15f0cebd00d50074fd336a169d53422436a12dfe15149efec7072cfe817df8b
 
 build:
   number: 0
@@ -32,7 +32,6 @@ requirements:
     - platformdirs >=3.9.1,<5
     - typing_extensions >=4.13.2
     - importlib-metadata >=6.6
-    - filelock >=3.24.2,<4
 tests:
   - python:
       imports:
