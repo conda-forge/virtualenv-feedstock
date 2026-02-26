@@ -23,26 +23,27 @@ build:
 requirements:
   host:
     - python ${{ python_min }}.*
-    - hatch-vcs >=0.3
-    - hatchling >=1.17.1
+    - hatch-vcs >=0.4
+    - hatchling >=1.27
     - pip
   run:
     - python >=${{ python_min }}
     - distlib >=0.3.7,<1
-    - platformdirs >=3.9.1,<5
-    - typing_extensions >=4.13.2
+    - filelock<4,>=3.24.2
     - importlib-metadata >=6.6
-    - filelock >=3.24.2,<4
+    - platformdirs >=3.9.1,<5
+    - python-discovery >=1
+    - typing_extensions >=4.13.2
+
 tests:
   - python:
       imports:
         - virtualenv
         - virtualenv.activation
       pip_check: true
-      python_version: ${{ python_min }}.*
-  - requirements:
-      run:
-        - python ${{ python_min }}.*
+      python_version:
+        - ${{ python_min }}.*
+        - "*"
     script:
       - virtualenv --help
 
