@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: virtualenv
-  version: 20.39.0
+  version: "21.0.0"
 
 package:
   name: virtualenv
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/virtualenv-${{ version }}.tar.gz
-  sha256: a15f0cebd00d50074fd336a169d53422436a12dfe15149efec7072cfe817df8b
+  sha256: e8efe4271b4a5efe7a4dce9d60a05fd11859406c0d6aa8464f4cf451bc132889
 
 build:
   number: 0
@@ -23,26 +23,27 @@ build:
 requirements:
   host:
     - python ${{ python_min }}.*
-    - hatch-vcs >=0.3
-    - hatchling >=1.17.1
+    - hatch-vcs >=0.4
+    - hatchling >=1.27
     - pip
   run:
     - python >=${{ python_min }}
     - distlib >=0.3.7,<1
-    - platformdirs >=3.9.1,<5
-    - typing_extensions >=4.13.2
+    - filelock <4,>=3.24.2
     - importlib-metadata >=6.6
-    - filelock >=3.24.2,<4
+    - platformdirs >=3.9.1,<5
+    - python-discovery >=1
+    - typing_extensions >=4.13.2
+
 tests:
   - python:
       imports:
         - virtualenv
         - virtualenv.activation
       pip_check: true
-      python_version: ${{ python_min }}.*
-  - requirements:
-      run:
-        - python ${{ python_min }}.*
+      python_version:
+        - ${{ python_min }}.*
+        - "*"
     script:
       - virtualenv --help
 
