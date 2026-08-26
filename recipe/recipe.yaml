@@ -23,16 +23,17 @@ build:
 requirements:
   host:
     - python ${{ python_min }}.*
+    - pip
     - hatch-vcs >=0.4
     - hatchling >=1.27
-    - pip
   run:
     - python >=${{ python_min }}
     - distlib >=0.3.7,<1
-    - filelock <4,>=3.24.2
-    - importlib-metadata >=6.6
+    # tightest of upstream's floors (python >=3.10)
+    - filelock >=3.24.2,<4
     - platformdirs >=3.9.1,<5
     - python-discovery >=1.4.2
+    # tightest of upstream's floors (python <3.11)
     - typing_extensions >=4.13.2
 
 tests:
