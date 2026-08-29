@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: virtualenv
-  version: "21.7.6"
+  version: "21.7.7"
 
 package:
   name: virtualenv
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/virtualenv-${{ version }}.tar.gz
-  sha256: ed47c4e3bbe5176d4f22e95e53917d4e52bc00c82d38d35085ca2955b52a83be
+  sha256: 6874376f99ba6b8d4e3ee8bde67f9285412400c7d5b29ba41ee6daa5e0221bdc
 
 build:
   number: 0
@@ -32,7 +32,7 @@ requirements:
     # tightest of upstream's floors (python >=3.10)
     - filelock >=3.24.2,<4
     - platformdirs >=3.9.1,<5
-    - python-discovery >=1.4.2
+    - python-discovery >=1.6
     # tightest of upstream's floors (python <3.11)
     - typing_extensions >=4.13.2
 
