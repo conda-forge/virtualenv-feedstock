@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: virtualenv
-  version: "21.7.9"
+  version: "21.7.16"
 
 package:
   name: virtualenv
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/virtualenv-${{ version }}.tar.gz
-  sha256: a7e42d81d779dec8afd7dc4be71640fb959ea861bccfa5980cb4ad9f92e30675
+  sha256: d3fcf6954a07121c2b61efcb96419e2f40b3718d558998f13a7314e32cc42723
 
 build:
   number: 0
