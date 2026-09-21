@@ -25,7 +25,8 @@ requirements:
     - python ${{ python_min }}.*
     - pip
     - hatch-vcs >=0.4
-    - hatchling >=1.27
+    # tightest of upstream's floors (python >=3.10)
+    - hatchling >=1.28
   run:
     - python >=${{ python_min }}
     - distlib >=0.3.7,<1
@@ -33,8 +34,6 @@ requirements:
     - filelock >=3.24.2,<4
     - platformdirs >=3.9.1,<5
     - python-discovery >=1.6
-    # tightest of upstream's floors (python <3.11)
-    - typing_extensions >=4.13.2
 
 tests:
   - python:
