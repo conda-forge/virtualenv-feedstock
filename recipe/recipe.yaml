@@ -29,7 +29,7 @@ requirements:
   run:
     - python >=${{ python_min }}
     - distlib >=0.3.7,<1
-    - filelock >=3.24.2,<4
+    - filelock >=3.24.2,<5
     - platformdirs >=3.9.1,<5
     - python-discovery >=1.6
 
