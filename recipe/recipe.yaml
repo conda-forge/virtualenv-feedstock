@@ -29,9 +29,10 @@ requirements:
   run:
     - python >=${{ python_min }}
     - distlib >=0.3.7,<1
-    - filelock >=3.24.2,<5
+    - packaging >=23.1
     - platformdirs >=3.9.1,<5
     - python-discovery >=1.6
+    - typing_extensions >=4.13.2
 
 tests:
   - python:
