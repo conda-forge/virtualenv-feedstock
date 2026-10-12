@@ -24,15 +24,15 @@ requirements:
   host:
     - python ${{ python_min }}.*
     - pip
-    - hatch-vcs >=0.4
+    - hatch-vcs >=0.5
     - hatchling >=1.28
   run:
     - python >=${{ python_min }}
-    - distlib >=0.3.7,<1
+    - distlib >=0.4.3,<1
     - filelock >=3.24.2,<5
-    - packaging >=23.1
-    - platformdirs >=3.9.1,<5
-    - python-discovery >=1.6
+    - packaging >=26.3
+    - platformdirs >=4.4,<5
+    - python-discovery >=1.6.1
 
 tests:
   - python:
