@@ -24,6 +24,7 @@ requirements:
   host:
     - python ${{ python_min }}.*
     - pip
+    - hatch-fancy-pypi-readme >=25.1
     - hatch-vcs >=0.5
     - hatchling >=1.28
   run:
