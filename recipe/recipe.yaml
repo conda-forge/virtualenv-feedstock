@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: virtualenv
-  version: "21.15.6"
+  version: "21.15.7"
 
 package:
   name: virtualenv
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/virtualenv-${{ version }}.tar.gz
-  sha256: c8b65c7d206ca6ef18de9352c160b3f04f66fff9f6b0ec8fd31f14688eba52c4
+  sha256: d8c9b23a031c579569159dee7b3f514dd79824ecf1d9201c6e7825cd2abc3a09
 
 build:
   number: 0
@@ -26,7 +26,9 @@ requirements:
     - pip
     - hatch-fancy-pypi-readme >=25.1
     - hatch-vcs >=0.5
+    # python-sbom[hatch]
     - hatchling >=1.28
+    - python-sbom >=0.1.2
   run:
     - python >=${{ python_min }}
     - distlib >=0.4.3,<1
