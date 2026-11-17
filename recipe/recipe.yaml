@@ -26,7 +26,9 @@ requirements:
     - pip
     - hatch-fancy-pypi-readme >=25.1
     - hatch-vcs >=0.5
+    # python-sbom[hatch]
     - hatchling >=1.28
+    - python-sbom >=0.1.2
   run:
     - python >=${{ python_min }}
     - distlib >=0.4.3,<1
